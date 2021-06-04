@@ -1,0 +1,66 @@
+Git Github
+-----------
+Git: Local Repository -> code created -> commit (push) into git repository (each individual do at their system)
+
+GitHub: Remote Repository
+		from git -> push -> gihub
+								-> DevOP use jenkins and executee the test cases
+								-> CI tools (Jenking example)
+								-> If build is successful->mail trigger
+		download the build in local and continue coding
+
+Code in pycharm
+	-> commit/update to git (local repository)
+		-> Git to GitHub (Remote Repository) push/pull
+			-> Jenkins pull and create build
+-> download build from github
+
+Download and install the Git
+
+Now,
+we need to place our code to git, then push to github and from github jenkins will get
+
+Let download Jenkins also, download jar file
+setup project in jenkis and run the project and handover to devops
+Launch .war file:cmd
+java -jar jenkins.war
+ 
+push code to git and then github
+--------------------------------
+
+1. create local git repository for your project
+C:\Users\Rizwan\PycharmProjects\SeleniumEasy
+	Now,
+	Go to this location, right click->git bash here ->git shell will open
+	Git commands
+	creation cmd:
+	--------------
+	git init -> create empty git repository in this location [local repository]
+
+2. connect local repository with remote repository
+	- go to github, create new repository [same name as project]
+	git remote add origin https://github.com/iamrizwan007/SeleniumEasy.git
+	- Above cmd will connect local repository with global repository
+	
+3. Commit our code to git
+	Before doing commit for the first time:
+		git config --global user.name "iamrizwan007"
+		git config --global user.email "rizwan0006@gmail.com"
+	Now
+	We are ready to commit out code
+		- we directly cannot commit to git
+		- add all the files to the staging area [btwn git and code] -> then to git
+			- to check the status [how many not committed/yet to be committed]
+				git	status	
+			- to add to staging area [after adding- green color]
+				git add -A
+			- to commit from staging to git repository [local]
+				git commit -m "first commit"
+			- push to remote repository
+				git push -u origin master
+One direction flow completed
+
+Now, if you want to make changes
+pull the code
+-------------
+	- git pull

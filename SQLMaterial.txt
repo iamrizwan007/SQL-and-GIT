@@ -1,0 +1,393 @@
+See All 91 customers
+---------------------
+Select * from Customers;	#91 records with all col
+
+CustomerID	CustomerName	ContactName	Address	City	PostalCode	Country
+1	Alfreds Futterkiste	Maria Anders	Obere Str. 57	Berlin	12209	Germany
+.
+.
+.
+91	Wolski	Zbyszek	ul. Filtrowa 68	Walla	01-012	Poland
+
+See CutomerName data for 91 customers:
+--------------------------------------
+Select CustomerName from Customers;
+
+This will display CustomerName column data from customers table
+
+1.Select:
+---------
+- Retrieve data
+syntax:
+Select * from tablename
+*---> All coulumns of table
+
+Select col1 from table
+
+Select col,col2,col3 from table
+SELECT CustomerName,Country,PostalCode from Customers
+
+2.distinct keyword:
+-------------------
+used with select command to retrieve the unique value 
+for specfied column
+
+Without using distinct:
+Select * from Customer --> retrieve all
+
+Retrieve unique data from country column
+Select distinct Country from Customers
+
+two columns/ more than 1 
+Select distinct Country,PostalCode from Customers
+--> combination of unique value
+Mexico	05021
+Mexico	05023
+
+3. SQL is not Case Sensitive
+-----------------------------
+SeLecT postalCODE fRoM CuStOmErs
+
+Keyword and table name both not case sensitive
+
+4. Semicolon(;) - Madatory/Not?
+--------------------------------
+Select * from customers;
+some RDBMS it is mandatory, while for some it is optional
+MySQL--> Optional
+
+BestPractice: provide semicolon
+
+Need for multiple statements:
+select * from customer;
+select postalcode from customers
+
+5. Where clause:
+-----------------
+-> mainly used in select statements (retrieve the data)
+--> Can be used with other statements also (covered later)
+when we use this clause then:
+- we will be able to filter the rerieve data on condition
+
+Select * from customers where country='Germany'
+Select * from customers where customerid = 9 	#not in case on int- '9'
+select customerid,customername from customers where city='Berlin'
+
+Note: data is case sensitive passed in single quotes
+
+6. Relational Operators in where clause:
+----------------------------------------
+<
+<=
+=
+>
+>=
+<>
+
+select * from products where price = 40
+select * from products where price > 40
+select * from products where price < 40
+select * from products where price >= 40
+select * from products where price <= 40
+select * from products where price <> 40
+
+7. Logical operators with where clause:
+----------------------------------------
+--> Filer condition based on multiple conditions.
+select * from customers where country = 'Mexico' AND customerid>3
+select * from customers where country = 'Mexico' OR country='Germany'
+select * from customers where country = 'Mexico' AND customerid>3 AND contactname <> 'Francisco Chang'
+select * from customers where NOT country = 'Mexico'
+
+8. Between operator:
+--------------------
+
+--> filter in the specified range
+1,2,3,-------100
+filter records in between 50-60
+50,51,...60
+
+select * from products where price between 10 AND 20
+select productname from products where price between 10 And 20
+select productname from products where price>= 10 And price<=20
+select * from products where price not between 10 And 20
+
+9. Order by clause:
+------------------
+to order the retrieved records in ascending or descending order
+- ASC
+- DESC
+Select * from customers Order by country [by default ASC]
+Select * from customers Order by country DESC
+Select Customerid from customers Order by Customerid DESC
+Select Customerid from customers Order by Customerid ASC
+Select Customerid,Country,City from customers Order by Country ASC,City DESC
+select * from products order by price DESC
+
+10. Between operator with text:
+-------------------------------
+select * from customers where country between 'Canada' And 'Finland'
+
+internally, first it will get into alphbetical order, then process the request
+
+11. In operator:
+----------------
+-> simplify the process of providing multiple values from column
+select * from customers where customerid in (1,4,5)
+select * from customers where country in ('Germany','Canada')
+
+12. Like operator and WildCard characters:
+------------------------------------------
+when using wildcard, use like as well
+-> pattern matching
+
+wildcard character:
+- All chars -> %
+- Single char -> _
+
+select * from customers where country like '%a';
+select * from customers where country like 'f%';
+select * from customers where country like 'Ger%';
+select * from customers where country like 'G%y';
+select * from customers where country like '%nc%';
+
+select * from customers where country like '_ermany';
+select * from customers where country like '____any';
+select * from customers where country like '_a_a_a';
+select * from customers where country like 'F_n_a%';
+
+13. Aliases in place of column table name:
+------------------------------------------
+select CustomerID AS id,CustomerName as name from customers;
+
+14. limit:
+----------
+-> improve performance in retrieving
+select * from orderdetails limit 50
+select * from orderdetails limit 50,50 [after 50 display 50]
+
+15. Breaking single SQL into multiple lines:
+--------------------------------------------
+-> readability will become easy
+lenthy: select customerid,customername,city from customers where country='France' limit 5
+break it
+
+select customerid,customername,city
+from customers 
+where country='France'
+limit 5
+
+16. Built in functions
+-----------------------
+Every RDBMS has its own built in function.
+For MySQL:
+4 types high level:
+- String Functions [string operations]
+- Numeric functions [numeric opertations]
+- Aggregate functions
+- Date and Time functions
+
+17. upper()
+------------
+string function -> convert to uppercase
+select upper('Rizwan');
+select upper(country) from customers -> prob col changing
+select upper(country) as COUNTRY from customers
+
+18. lower()
+-----------
+it is opposite of upper -> same implementation
+
+19. length()
+------------
+select length('Rizwan')  -> 6
+select length(country) as country_length from customers
+select customerid from customers where length(country) = 6
+
+20. instr()
+-----------
+find position of the given text in data of the specified col
+
+21. trim()
+------------
+select trim('   Rizwan    ') --> Rizwan
+
+22. Arithmetic op
+-----------------------
+-select 5+4
+-select 5-4
+-select 5*4
+-select 5/4
+
+23. Create, view, Delete and use the database.
+----------------------------------------------
+Schemas = Database
+
+show databases -> show all database in the server
+create database TestDB; --> createe a new db TestDB
+drop database zzz; --> delete database
+select * from sakila.actor [sakila database mention] overcome?
+--> use sakila
+use sakila;
+select * from actor;
+
+create tables: obj
+
+use Testdb;
+create table employees(id int,name varchar(15),experience int);
+describe employees;
+select * from employees;
+
+create table emp as
+select id,name from employees
+
+describe emp
+select * from emp
+
+drop table emp --> delete table
+
+Inserting data into table:
+-------------------------
+use TestDB;
+select * from employees;
+describe employees
+insert into employees values(1,'Mohammad Rizwan',3);
+select * from employees;
+insert into employees(id,name) values(2,'Anuj')
+
+Data Type:
+---------
+each column have name and data type (int,string etc)
+
+when creating table need to provide.
+Types:
+------
+1. String (varchar)
+2. Numeric (INT,double,boolean)
+3. Date and time (date,datetime,time,year)
+
+use TestDB;
+select * from employees where experience IS not null;
+
+Delete record from the table:
+-----------------------------
+SET SQL_SAFE_UPDATES = 0;
+DELETE FROM employees
+WHERE name='test3';
+
+Update table records:
+----------------------
+update employees
+set experience=1
+where experience is null;
+
+Rename statement and To keyword:
+--------------------------------
+renaming the table name.
+use TestDB;
+rename table employees to EMP;
+select * from EMP
+
+Alter,Add,Rename,Drop,Modify column:
+-------------------------------------
+alter table EMP
+add location varchar(15);
+
+alter table EMP
+modify column location int;
+
+Alter table EMP
+rename column location to loc;
+
+alter table EMP
+drop column loc;
+
+describe EMP;
+
+set autocommit=0--> temporary commits nothing will be changed
+set autocommit=1 --> permanent commits
+
+if 
+set autocommit=0;
+manually need to commit use
+commit
+
+-->
+set autocommit=0
+insert into EMP values(1,'Riz',3)
+
+commit;
+
+rollback
+
+group by:
+--------
+select count(name),continent from country
+group by continent;
+
+having:
+-------
+select count(name) from EMP
+group by experience
+having count(name) = 2
+
+all clause:
+------------
+where>group by>having>order by
+
+select count(name) from country
+where surfacearea>100
+group by continent
+having count(name)<35
+order by count(name)
+
+set:
+----
+retrieve from 2 tables at a time.
+- union
+- union all
+- intersect
+- minus
+
+Union:
+------
+use testdb;
+create table t2(id int,name varchar(10));
+insert into t2 values(2,'t21');
+insert into t2 values(3,'t22');
+insert into t2 values(4,'t23');
+select id from t1
+union
+select id from t2
+
+joins:
+------
+- joining tables.[merging]  ---->> and then retrieve
+pre-requisite?
+- should have common columns
+
+1. inner join 	
+2. left join
+3. right join
+4. slef join
+
+use testdb;
+select * 
+from t1
+inner join t2
+on t1.id =t2.id;
+
+use testdb;
+select * 
+from t1
+left join t2
+on t1.id =t2.id;
+
+- consider right table
+use testdb;
+select * 
+from t1
+right join t2
+on t1.id =t2.id;
+
+full join is not supported in MYSQL --- Oracle
