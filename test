@@ -39,3 +39,112 @@ class Homepage:
                 suggestion.click()
                 break
                 
+
+
+
+PageObjects>WeatherDetailspageObj
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+
+
+class WeatherDetails:
+    currentTemp = (By.XPATH, "//div[@class='CurrentConditions--primary--39Y3f']/span")
+    symbol = "°"
+
+    def __init__(self, driver):
+        self.driver = driver
+
+    def getCurrentTemp(self):
+        temperture = self.driver.find_element(*WeatherDetails.currentTemp).text
+        print("Current Temperature:", temperture)
+        return float(temperture.replace(WeatherDetails.symbol, ""))
+
+
+
+TemperatureViaAPI>APITemperature
+import json
+import statistics
+import requests
+from jsonDict.jsonDictonary import input_json
+
+
+class ApiTemp:
+    temperatures = []
+
+    def __init__(self):
+        self.API_KEY = "166283422f3a88814385f411c263a434"
+
+    def getJsonCitiesTemp(self):
+        # converting json string to python dictionary
+        json_dict = json.loads(input_json)
+
+        # for every city mentioned in the json, getting the temperature via API and returning
+        # to later calculate the variance between API temperature and UI temperature
+        for city in json_dict.get("Cities"):
+            getcityweather = requests.get(
+                f"http://api.openweathermap.org/data/2.5/weather?q={city}&units=metric&appid={self.API_KEY}")
+            if getcityweather.status_code == 200:
+                cityDict = json.loads(getcityweather.text)
+                cityTemp = cityDict.get("main")['temp']
+                print(f"Temp for {city}", cityTemp)
+                ApiTemp.temperatures.append(float(cityTemp))
+                # print(statistics.variance([float(uiWeather), float(cityTemp)]))
+            else:
+                print(f"for {city}, error code:", getcityweather.status_code)
+        return ApiTemp.temperatures
+
+
+
+
+
+Tests>WeatherReportingTest
+from selenium import webdriver
+from webdriver_manager.chrome import ChromeDriverManager
+from jsonDict.jsonDictonary import input_json
+from PageObjects.HomepageObj import Homepage
+from PageObjects.WeatherDetailspageobj import WeatherDetails
+from TemperatureViaAPI.APITemperature import ApiTemp
+import json
+import statistics
+
+
+class TestWeatherReporting:
+    def __init__(self):
+        self.driver = webdriver.Chrome(ChromeDriverManager().install())
+        self.driver.get("https://weather.com/")
+
+    def getWeatherInfoViaUI(self):
+        hp = Homepage(self.driver)
+        wd = WeatherDetails(self.driver)
+        hp.searchCity("Delhi")
+        return wd.getCurrentTemp()
+
+    def getWeatherInfoViaAPI(self):
+        apiObj = ApiTemp()
+        temperatures = apiObj.getJsonCitiesTemp()
+        return temperatures
+
+    def calculateVariance(self, samples, UISample):
+        jsonDict = json.loads(input_json)
+        variance = jsonDict.get("variance")
+        print("**********")
+        print(samples)
+        print(type(samples[0]))
+        print(jsonDict)
+        print(variance)
+        for sample in samples:
+            data_sample = [UISample, sample]
+            print(data_sample)
+            if statistics.variance(data_sample) < variance:
+                print("pass")
+            else:
+                print("exceed variance range")
+
+
+test = TestWeatherReporting()
+temperatureFromUI = test.getWeatherInfoViaUI()
+temperatureFromAPI = test.getWeatherInfoViaAPI()
+print(temperatureFromUI)
+print(temperatureFromAPI)
+test.calculateVariance(temperatureFromAPI, temperatureFromUI)
+
